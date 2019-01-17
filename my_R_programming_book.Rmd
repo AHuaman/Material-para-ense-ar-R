@@ -1,0 +1,166 @@
+---
+title: "Programación en R: Una guía para los impacientes"
+author: "Alessandro Oscar Huamán Molina"
+date:  "`r Sys.Date()` "
+output:
+  html_document:
+    df_print: paged
+---
+
+# ¿Qué es R?
+
+R es un **entorno y lenguaje de programación** con un enfoque al análisis estadístico. Nace de la necesidad de contar con un lenguaje que sea numèricamente confiable (necesario para las carreras de ciencias puras) y suficientemente dinámico, tal que permita el uso y procesamiento interactivo de información, almacenada en forma de objetos. Esto es vital para el proceso de investigación, análisis y modelamiento a través del método científico.
+
+El lenguaje R es muy popular en la actualidad gracias a la revolución de las tecnologías de la información, volviéndose importante para labores relacionadas a la minería de datos, inteligencia de negocios y redacción científica (procesos de análisis de datos en general). Las funcionalidades básicas que R ofrece con su instalación se vieron fácilmente extendidas a lo largo de los años, gracias a las contribuciones de la comunidad en forma de **librerías (o paquetes)**. 
+
+Las librerías son conjuntos de funciones y estructuras de datos, creadas por personas a partir de una necesidad específica y/o para solucionar algún problema. Dichas librerías se encuentran almacenadas en repositorios (sitios web donde se almacenan librerías), siendo el más usado **CRAN** (Comprehensive R Archive Network). Dicho repositorio es mantenido por un equipo de estadísticos e ingenieros de entre los cuales se encuentran miembros creadores del lenguaje R y S (lenguaje descontinuado y predecesor de R). Las librerías subidas a dicho repositorio pasan por diversas validaciones por parte de la comunidad , las cuales tienen como objetivo eliminar errores frecuentes (bugs), proponer mejoras y, en pocas palabras, hacer confiable su contenido para el uso masivo y seguro. Cualquier persona que cuenta con R instalado puede **descargar e instalar librerías directamente desde el programa**.
+
+# Elementos básicos de R
+
+## Orientación a objetos
+
+R es un lenguaje **orientado a objetos**. Un objeto, en términos sencillos, es un elemento que existe en la memoria RAM de la computadora. Dicho elemento actúa como un contenedor de *cualquier cosa que nos interese manipular dentro de R*, y cuenta con características únicas que le permite interactuar con otros objetos para obtener resultados deseados.
+Por ejemplo, podemos utilizar archivos de texto separados por comas, documentos Excel, conexiones a bases de datos (como Oracle), imágenes, modelos estadísticos, gráficos, construir funciones, etc. si los cargamos y/o creamos dentro de R a través de **algún objeto que los represente**. Basta con realizar lo siguiente:
+
+1. Digitar el nombre del objeto que se desea crear
+2. Identificar qué se desea almacenar dentro de dicho objeto
+3. Asignar lo identificado en el punto **2** *dentro* del objeto a través del nombre dado en **1**
+4. Manipular el objeto, invocándolo con el nombre dado en **1**
+
+Ejemplo:
+
+```{r}
+# Se crea un objeto con el nombre "mi_objeto_1""
+mi_objeto_1 <- c(1, 2, 3, 4, 5)
+print(mi_objeto_1)
+```
+
+El objeto que acabamos de crear se llama "mi_objeto_1" y contiene la secuencia de números 1, 2, 3, 4 y 5. Es importante mencionar lo siguiente:
+
+- La flecha que apunta hacia la izquierda (`<-`) se llama **operador de asignación**, responsable de crear nuevos objetos y modificar objetos ya existentes. El nombre del objeto debe estar a la izquierda de este operador, mientras que el contenido debe estar a la derecha
+- `c()` es la **función de concatenación**. Combina en secuencia los elementos introducidos dentro de los paréntesis
+- `print()` es una función que permite **imprimir el contenido** de un objeto en la consola de R
+
+La función `print()` se invoca automáticamente si sólo digitamos el nombre del objeto en una línea y ejecutamos dicha línea:
+```{r}
+# Lo mismo que "print()":
+mi_objeto_1
+```
+
+Si realizamos lo mostrado arriba para un objeto que no hemos creado (ej: `objeto_no_creado`), aparecerá el siguiente error: 
+`Error: object 'objeto_no_creado' not found`
+
+## Tipos de datos
+
+Todo aquello que se almacena en un objeto está compuesto por datos, y los datos tienen las siguientes formas fundamentales dentro del lenguaje R:
+
+- Tipo `numeric`
+- Tipo `character`
+- Tipo `Date`
+- Tipo `logical`
+
+```{r}
+# Ejemplo de dato numeric:
+mi_objeto_num <- mi_objeto_1
+mi_objeto_num
+class(mi_objeto_num)
+
+# Ejemplo de dato character:
+mi_objeto_char <- c("R es un lenguaje de programación orientado a objetos")
+mi_objeto_char
+class(mi_objeto_char)
+
+# Ejemplo de dato Date:
+mi_objeto_date <- as.Date("29/07/2018", format = "%d/%m/%Y")
+mi_objeto_date
+class(mi_objeto_date)
+
+# Ejemplo de dato logical:
+mi_objeto_logical <- c(TRUE, FALSE)
+mi_objeto_logical
+class(mi_objeto_logical)
+```
+
+Observaciones importantes:
+
+- Al inicio se crea el objeto `mi_objeto_num`, el cual es una copia de `mi_objeto_1`, de tipo numérico y creado anteriormente. Con esto se ejemplifica cómo crear objetos a partir de otro
+- Cualquier tipo de información puede ser expresada como `character` dentro de `R`. Los objetos de esta clase se conocen cono `strings` (cadenas de texto) y ocupan más espacio en la memoria RAM que los demás tipos de datos
+- `R` tiene un formato establecido para representar las fechas: "AÑO-MES-DIA". En este ejemplo introducimos la fecha de interés como un *string* con el formato "DIA/MES/AÑO". Por ello debemos indicar a `R` el formato de entrada para que este le dé el formato establecido. Esto lo hacemos con el argumento `format = ` dentro de la función `as.Date()`, donde se debe utilizar lo siguiente:
+    - `%Y` para indicar la posición del AÑO con 4 dígitos
+    - `%m` para indicar la posición del MES con 2 dígitos
+    - `%d` para indicar la posición del DIA con 2 dígitos
+    - Los elementos de separación de AÑO, MES, DIA tal como se introducen. Los más comunes son `"/"` y `"-"`
+- Los objetos de tipo `logical` son muy útiles para representar condiciones lógicas dentro de funciones y operaciones de filtrado
+- La función `class()` permite conocer el tipo de dato dentro de cada objeto. También permite conocer la clase del objeto
+
+## Clases de objetos
+
+R maneja 4 clases nativas:
+
+- `vector`. Es una secuencia estructurada de **elementos de un mismo tipo**. Cada vector es una *columna*
+- `matrix`. Es una matriz que contiene datos ordenados en filas y columnas. Todos los datos dentro de un `matrix` **deben ser del mismo tipo, necesariamente**
+- `data.frame`. También conocida como **tabla de datos**, es un conjunto de columnas unidas. Cada columna es de la clase `vector` y representa una variable. Por lo tanto, esta clase de objeto **puede contener diferentes tipos de datos** almacenados en distintas columnas
+- `list`. Es un contenedor general de objetos, útil para almacenar **cualquier cantidad de objetos de cualquier clase**
+
+Nótese que los objetos creados hasta el momento son *vectores*. A continuación se ejemplifican las demás clases:
+
+```{r}
+mi_matriz <- matrix(c(1,2,3,4), nrow = 2, ncol = 2, byrow = TRUE)
+mi_matriz
+class(mi_matriz)
+
+mi_dataframe <- data.frame(
+  columna1 = c(1,2,3,4,5), 
+  columna2 = c("a","e","i","o","u"), 
+  columna3 = c(TRUE,FALSE,TRUE,TRUE,FALSE)
+)
+mi_dataframe
+class(mi_dataframe)
+
+# Combinamos varios objetos previamente creados
+mi_lista <- list(mi_matriz, mi_dataframe, mi_objeto_date, mi_objeto_char)
+mi_lista
+class(mi_lista)
+```
+
+## Conversión entre tipos de datos y clases de objetos
+
+Frecuentemente se desea dar un formato adecuado a los objetos prestes a manipular. La forma general de las funciones encargadas de las conversiones para lograr este propósito es la siguiente: *as.clase*. Algunas funciones útiles:
+
+- `as.numeric()`. Convertir a `numeric`
+- `as.character()`. Convertir a `character`
+- `as.Date(x, format)`. Convertir a `Date`. Son necesarios 2 argumentos: `x` (el objeto a convertir) y `format` (el formato de fecha de entrada entre comillas)
+- `as.data.frame()`. Convertir a `data.frame`
+- `as.list()`. Convertir a `list`
+- `as.matrix()`. Convertir a `matrix`
+
+A continuación se ejemplifican algunos:
+```{r}
+# Vector creado anteriormente:
+mi_objeto_num # Actualmente es un vector numérico
+as.character(mi_objeto_num) # Ahora es texto
+as.matrix(mi_objeto_num) # Se creó una matriz numérica 5x1
+as.matrix(as.character(mi_objeto_num)) # Se creó una matriz de texto 5x1
+as.data.frame(mi_objeto_num) # Se creó un dataframe de una columna
+```
+
+De las 6 funciones presentadas, las 3 primeras son las más utilizadas pues permitirán dar formato correcto a las columnas de objetos `data.frame`, dado que cada columna es un `vector`.
+
+# Instalación de librerías
+
+Lo único necesario para instalar cualquier librería ubicada en **CRAN** es la función `install.packages()`:
+
+```{r, eval=FALSE}
+# Función utilizada para instalar una librería de CRAN:
+# Nota: es importante utilizar las comillas para encerrar el nombre de la librería a descargar dentro del paréntesis
+install.packages("aqui_va_el_nombre_de_la_libreria")
+```
+
+Una vez se ejecute el comando arriba, se instalará la librería y sus dependencias (librerías sobre las cuales se construye la librería de interés). La instalación es necesaria por única vez y es posible actualizar el contenido de una librería llamando la misma función (los autores pueden mejorar el contenido y publicar de nuevo la librería). Para utilizar el contenido de la librería, es necesario llamar la función `library()`:
+
+```{r, eval=FALSE}
+# Nótese que no es necesario utilizar comillas en esta función
+library(aqui_va_el_nombre_de_la_libreria)
+```
+
+Basta con ejecutar la función **una vez por sesión** para que el contenido permanezca disponible hasta que esta finalice. Cada vez que los programas R y RStudio son abiertos, se genera una nueva sesión, la cual finaliza cuando se cierra el programa.
